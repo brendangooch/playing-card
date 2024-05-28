@@ -1,0 +1,13 @@
+{
+    "transform": {},
+    "testRegex": "((\\.|/)(test|spec))\\.js$",
+    "verbose": true,
+    "coverageProvider": "v8",
+    "moduleFileExtensions": [
+        "js"
+    ],
+    "slowTestThreshold": 5,
+    "testPathIgnorePatterns": [
+        "/node_modules/"
+    ]
+}
