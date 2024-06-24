@@ -92,4 +92,27 @@ export default class PlayingCard {
         return this.rank.number < other.rank.number;
     }
 
+    public hasSameSuitAs(other: PlayingCard): boolean {
+        return this.suit.number === other.suit.number;
+    }
+
+    public hasHigherSuitThan(other: PlayingCard): boolean {
+        if (this.isJoker() || other.isJoker()) return false;
+        return this.suit.number > other.suit.number;
+    }
+
+    public hasLowerSuitThan(other: PlayingCard): boolean {
+        if (this.isJoker() || other.isJoker()) return false;
+        return this.suit.number < other.suit.number;
+    }
+
+    // a joker ranks highest, then a greater value, then a higher suit
+    public isHigherThan(other: PlayingCard): boolean {
+        if (this.isJoker()) return true;
+        if (other.isJoker()) return false;
+        if (this.hasHigherRankThan(other)) return true;
+        if (this.hasHigherSuitThan(other)) return true;
+        return false;
+    }
+
 }

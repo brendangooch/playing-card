@@ -16,6 +16,10 @@ function testAll(): void {
     testHasSameRankAs();
     testHasHigherRankThan();
     testHasLowerRankThan();
+    testHasSameSuitAs();
+    testHasHigherSuitThan();
+    testHasLowerSuitThan();
+    testIsHigherThan();
 }
 
 function testType(type: number, name: string, definite: string, indefinite: string, plural: string, isJoker: boolean): void {
@@ -400,4 +404,153 @@ function testHasLowerRankThan(): void {
 
     });
 
+}
+
+// hasSameSuitAs(other: PlayingCard): boolean
+function testHasSameSuitAs(): void {
+    describe('hasSameSuitAs()', () => {
+        test('matches ONLY cards with the same suit and no others', () => {
+            for (let t1 = 0; t1 <= 52; t1++) {
+                for (let t2 = 0; t2 <= 52; t2++) {
+                    const cardA = new PlayingCard(t1);
+                    const cardB = new PlayingCard(t2);
+                    if (cardA.suit.number === cardB.suit.number) {
+                        expect(cardA.hasSameSuitAs(cardB)).toBeTruthy();
+                        expect(cardB.hasSameSuitAs(cardA)).toBeTruthy();
+                    }
+                    else {
+                        expect(cardA.hasSameSuitAs(cardB)).not.toBeTruthy();
+                        expect(cardB.hasSameSuitAs(cardA)).not.toBeTruthy();
+                    }
+                }
+            }
+        });
+    });
+}
+
+// hasHigherSuitThan(other: PlayingCard): boolean
+function testHasHigherSuitThan(): void {
+    describe('hasHigherSuitThan()', () => {
+
+        test('if either card is a joker, returns false', () => {
+            const joker = new PlayingCard(0);
+            for (let t = 0; t <= 52; t++) {
+                const other = new PlayingCard(t);
+                expect(joker.hasHigherSuitThan(other)).toBeFalsy();
+                expect(other.hasHigherSuitThan(joker)).toBeFalsy();
+            }
+        });
+
+        test('matches ONLY against cards with a higher suit', () => {
+            for (let t1 = 1; t1 <= 52; t1++) {
+                for (let t2 = 1; t2 <= 52; t2++) {
+                    const cardA = new PlayingCard(t1);
+                    const cardB = new PlayingCard(t2);
+                    if (cardA.suit.number > cardB.suit.number) {
+                        expect(cardA.hasHigherSuitThan(cardB)).toBeTruthy();
+                        expect(cardB.hasHigherSuitThan(cardA)).not.toBeTruthy();
+                    }
+                    else if (cardA.suit.number < cardB.suit.number) {
+                        expect(cardA.hasHigherSuitThan(cardB)).not.toBeTruthy();
+                        expect(cardB.hasHigherSuitThan(cardA)).toBeTruthy();
+                    }
+                }
+            }
+        });
+
+    });
+}
+
+// hasLowerSuitThan(other: PlayingCard): boolean
+function testHasLowerSuitThan(): void {
+    describe('hasLowerSuitThan()', () => {
+
+        test('if either card is a joker, returns false', () => {
+            const joker = new PlayingCard(0);
+            for (let t = 0; t <= 52; t++) {
+                const other = new PlayingCard(t);
+                expect(joker.hasLowerSuitThan(other)).toBeFalsy();
+                expect(other.hasLowerSuitThan(joker)).toBeFalsy();
+            }
+        });
+
+        test('matches ONLY against cards with a lower suit', () => {
+            for (let t1 = 1; t1 <= 52; t1++) {
+                for (let t2 = 1; t2 <= 52; t2++) {
+                    const cardA = new PlayingCard(t1);
+                    const cardB = new PlayingCard(t2);
+                    if (cardA.suit.number < cardB.suit.number) {
+                        expect(cardA.hasLowerSuitThan(cardB)).toBeTruthy();
+                        expect(cardB.hasLowerSuitThan(cardA)).not.toBeTruthy();
+                    }
+                    else if (cardA.suit.number > cardB.suit.number) {
+                        expect(cardA.hasLowerSuitThan(cardB)).not.toBeTruthy();
+                        expect(cardB.hasLowerSuitThan(cardA)).toBeTruthy();
+                    }
+                }
+            }
+        });
+
+    });
+}
+
+// isHigherThan(other: PlayingCard): boolean
+function testIsHigherThan(): void {
+    describe('isHigherThan()', () => {
+
+        // a joker is higher than any other card
+        test('a joker is higher than any other card', () => {
+            const joker = new PlayingCard(0);
+            for (let t = 1; t <= 52; t++) {
+                const other = new PlayingCard(t);
+                expect(joker.isHigherThan(other)).toBeTruthy();
+            }
+        });
+
+        // false if other card is a joker
+        test('false if other card is a joker', () => {
+            const joker = new PlayingCard(0);
+            for (let t = 1; t <= 52; t++) {
+                const other = new PlayingCard(t);
+                expect(other.isHigherThan(joker)).not.toBeTruthy();
+            }
+        });
+
+        // sorted by rank if ranks not the same
+        test('sorted by rank if ranks not the same', () => {
+            for (let t1 = 1; t1 <= 52; t1++) {
+                for (let t2 = 1; t2 <= 52; t2++) {
+                    const cardA = new PlayingCard(t1);
+                    const cardB = new PlayingCard(t2);
+                    if (cardA.rank.number > cardB.rank.number) {
+                        expect(cardA.isHigherThan(cardB)).toBeTruthy();
+                    }
+                    if (cardA.rank.number < cardB.rank.number) {
+                        expect(cardB.isHigherThan(cardA)).toBeTruthy();
+                    }
+                }
+            }
+        });
+
+        // sorted by suit if rank is the same
+        test('sorted by suit if rank is the same', () => {
+            for (let t1 = 1; t1 <= 52; t1++) {
+                for (let t2 = 1; t2 <= 52; t2++) {
+                    const cardA = new PlayingCard(t1);
+                    const cardB = new PlayingCard(t2);
+                    if (cardA.hasSameRankAs(cardB)) {
+                        if (cardA.suit.number > cardB.suit.number) {
+                            expect(cardA.isHigherThan(cardB)).toBeTruthy();
+                            expect(cardB.isHigherThan(cardA)).not.toBeTruthy();
+                        }
+                        if (cardA.suit.number < cardB.suit.number) {
+                            expect(cardA.isHigherThan(cardB)).not.toBeTruthy();
+                            expect(cardB.isHigherThan(cardA)).toBeTruthy();
+                        }
+                    }
+                }
+            }
+        });
+
+    });
 }
