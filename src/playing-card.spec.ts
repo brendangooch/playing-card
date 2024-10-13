@@ -538,10 +538,20 @@ function testIsHigherThan(): void {
                 for (let t2 = 1; t2 <= 52; t2++) {
                     const cardA = new PlayingCard(t1);
                     const cardB = new PlayingCard(t2);
-                    if (cardA.hasSameRankAs(cardB)) {
+                    if (cardA.hasSameRankAs(cardB)) { // <-- and what if the card has a lower rank but higher suit? subtle bug
                         if (cardA.suit.number > cardB.suit.number) {
                             expect(cardA.isHigherThan(cardB)).toBeTruthy();
                             expect(cardB.isHigherThan(cardA)).not.toBeTruthy();
+                        }
+                        if (cardA.suit.number < cardB.suit.number) {
+                            expect(cardA.isHigherThan(cardB)).not.toBeTruthy();
+                            expect(cardB.isHigherThan(cardA)).toBeTruthy();
+                        }
+                    }
+                    if (cardA.hasLowerRankThan(cardB)) {
+                        if (cardA.suit.number > cardB.suit.number) { // <-- does not matter if rank is lower
+                            expect(cardA.isHigherThan(cardB)).not.toBeTruthy();
+                            expect(cardB.isHigherThan(cardA)).toBeTruthy();
                         }
                         if (cardA.suit.number < cardB.suit.number) {
                             expect(cardA.isHigherThan(cardB)).not.toBeTruthy();

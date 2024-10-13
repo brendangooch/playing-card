@@ -111,7 +111,7 @@ export default class PlayingCard {
         if (this.isJoker()) return true;
         if (other.isJoker()) return false;
         if (this.hasHigherRankThan(other)) return true;
-        if (this.hasHigherSuitThan(other)) return true;
+        if (this.hasSameRankAs(other) && this.hasHigherSuitThan(other)) return true;
         return false;
     }
 
