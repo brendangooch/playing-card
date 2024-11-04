@@ -1,0 +1,6 @@
+
+v3.0.0
+    extracted getRankFromType and getSuirFromType functions from PlayingCard class
+    changed name of a few methods in PlayingCard class
+    re-wrote full tests
+    

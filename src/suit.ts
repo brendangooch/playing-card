@@ -2,21 +2,25 @@
  * represents the suit of a playing card in a standard deck of cards
  */
 
-export default class Suit {
+import { type tPlayingCardType } from "./index.js";
+import { getSuitFromType } from "./get-suit-from-type.js";
 
-    // @ts-ignore
-    private type: number;
+export class Suit {
 
-    public constructor(type: number) {
-        this.type = (type < 0 || type > 52) ? 0 : type;
+    private type: tPlayingCardType;
+
+    public constructor(type: tPlayingCardType) {
+        this.type = type;
     }
 
     public get number(): number {
-        return Math.ceil(this.type / 13);
+        return getSuitFromType(this.type);
     }
 
     public get name(): string {
         switch (this.number) {
+            case 0:
+                return 'joker';
             case 1:
                 return 'club';
             case 2:
@@ -25,9 +29,8 @@ export default class Suit {
                 return 'spade';
             case 4:
                 return 'diamond';
-            default:
-                return 'joker';
         }
+        return 'undefined';
     }
 
 }

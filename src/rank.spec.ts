@@ -4,124 +4,115 @@
  * values 1 - 13
  */
 
-import Rank from "./rank.js";
+import * as EXPECT from '@brendangooch/jest-expect';
+import { Rank } from './rank.js';
+import { type tPlayingCardType } from './index.js';
 
-describe('Rank', () => {
-    testAll();
-});
-
+testAll();
 function testAll(): void {
-    testJoker();
-    testClubs();
-    testHearts();
-    testSpades();
-    testDiamonds();
-    testInvalidTypeDefaultsToJoker();
-}
-
-function testType(type: number, number: number, name: string, indefinite: string, definite: string, plural: string): void {
-
-    const rank = new Rank(type);
-    describe(`type: ${type}`, () => {
-
-        test(`number: ${number}`, () => {
-            expect(rank.number).toBe(number);
-        });
-
-        test(`name: ${name}`, () => {
-            expect(rank.name).toBe(name);
-        });
-
-        test(`name with definite article: ${definite}`, () => {
-            expect(rank.nameDefinite).toBe(definite);
-        });
-
-        test(`name with indefinite article: ${indefinite}`, () => {
-            expect(rank.nameIndefinite).toBe(indefinite);
-        });
-
-        test(`plural name: ${plural}`, () => {
-            expect(rank.namePlural).toBe(plural);
-        });
-
+    describe('Rank', () => {
+        testJoker();
+        testClubs();
+        testHearts();
+        testSpades();
+        testDiamonds();
     });
-
 }
 
 function testJoker(): void {
-    testType(0, 0, 'joker', 'the joker', 'a joker', 'jokers');
+    fullTest(0, 'joker');
 }
 
 function testClubs(): void {
-    testType(1, 1, 'ace', 'the ace', 'an ace', 'aces');
-    testType(2, 2, 'two', 'the two', 'a two', 'twos');
-    testType(3, 3, 'three', 'the three', 'a three', 'threes');
-    testType(4, 4, 'four', 'the four', 'a four', 'fours');
-    testType(5, 5, 'five', 'the five', 'a five', 'fives');
-    testType(6, 6, 'six', 'the six', 'a six', 'sixes');
-    testType(7, 7, 'seven', 'the seven', 'a seven', 'sevens');
-    testType(8, 8, 'eight', 'the eight', 'an eight', 'eights');
-    testType(9, 9, 'nine', 'the nine', 'a nine', 'nines');
-    testType(10, 10, 'ten', 'the ten', 'a ten', 'tens');
-    testType(11, 11, 'jack', 'the jack', 'a jack', 'jacks');
-    testType(12, 12, 'queen', 'the queen', 'a queen', 'queens');
-    testType(13, 13, 'king', 'the king', 'a king', 'kings');
+    fullTest(1, 'ace', 'an');
+    fullTest(2, 'two');
+    fullTest(3, 'three');
+    fullTest(4, 'four');
+    fullTest(5, 'five');
+    fullTest(6, 'six', 'a', 'es');
+    fullTest(7, 'seven');
+    fullTest(8, 'eight', 'an');
+    fullTest(9, 'nine');
+    fullTest(10, 'ten');
+    fullTest(11, 'jack');
+    fullTest(12, 'queen');
+    fullTest(13, 'king');
 }
 
 function testHearts(): void {
-    testType(14, 1, 'ace', 'the ace', 'an ace', 'aces');
-    testType(15, 2, 'two', 'the two', 'a two', 'twos');
-    testType(16, 3, 'three', 'the three', 'a three', 'threes');
-    testType(17, 4, 'four', 'the four', 'a four', 'fours');
-    testType(18, 5, 'five', 'the five', 'a five', 'fives');
-    testType(19, 6, 'six', 'the six', 'a six', 'sixes');
-    testType(20, 7, 'seven', 'the seven', 'a seven', 'sevens');
-    testType(21, 8, 'eight', 'the eight', 'an eight', 'eights');
-    testType(22, 9, 'nine', 'the nine', 'a nine', 'nines');
-    testType(23, 10, 'ten', 'the ten', 'a ten', 'tens');
-    testType(24, 11, 'jack', 'the jack', 'a jack', 'jacks');
-    testType(25, 12, 'queen', 'the queen', 'a queen', 'queens');
-    testType(26, 13, 'king', 'the king', 'a king', 'kings');
+    fullTest(14, 'ace', 'an');
+    fullTest(15, 'two');
+    fullTest(16, 'three');
+    fullTest(17, 'four');
+    fullTest(18, 'five');
+    fullTest(19, 'six', 'a', 'es');
+    fullTest(20, 'seven');
+    fullTest(21, 'eight', 'an');
+    fullTest(22, 'nine');
+    fullTest(23, 'ten');
+    fullTest(24, 'jack');
+    fullTest(25, 'queen');
+    fullTest(26, 'king');
 }
 
 function testSpades(): void {
-    testType(27, 1, 'ace', 'the ace', 'an ace', 'aces');
-    testType(28, 2, 'two', 'the two', 'a two', 'twos');
-    testType(29, 3, 'three', 'the three', 'a three', 'threes');
-    testType(30, 4, 'four', 'the four', 'a four', 'fours');
-    testType(31, 5, 'five', 'the five', 'a five', 'fives');
-    testType(32, 6, 'six', 'the six', 'a six', 'sixes');
-    testType(33, 7, 'seven', 'the seven', 'a seven', 'sevens');
-    testType(34, 8, 'eight', 'the eight', 'an eight', 'eights');
-    testType(35, 9, 'nine', 'the nine', 'a nine', 'nines');
-    testType(36, 10, 'ten', 'the ten', 'a ten', 'tens');
-    testType(37, 11, 'jack', 'the jack', 'a jack', 'jacks');
-    testType(38, 12, 'queen', 'the queen', 'a queen', 'queens');
-    testType(39, 13, 'king', 'the king', 'a king', 'kings');
+    fullTest(27, 'ace', 'an');
+    fullTest(28, 'two');
+    fullTest(29, 'three');
+    fullTest(30, 'four');
+    fullTest(31, 'five');
+    fullTest(32, 'six', 'a', 'es');
+    fullTest(33, 'seven');
+    fullTest(34, 'eight', 'an');
+    fullTest(35, 'nine');
+    fullTest(36, 'ten');
+    fullTest(37, 'jack');
+    fullTest(38, 'queen');
+    fullTest(39, 'king');
 }
 
 function testDiamonds(): void {
-    testType(40, 1, 'ace', 'the ace', 'an ace', 'aces');
-    testType(41, 2, 'two', 'the two', 'a two', 'twos');
-    testType(42, 3, 'three', 'the three', 'a three', 'threes');
-    testType(43, 4, 'four', 'the four', 'a four', 'fours');
-    testType(44, 5, 'five', 'the five', 'a five', 'fives');
-    testType(45, 6, 'six', 'the six', 'a six', 'sixes');
-    testType(46, 7, 'seven', 'the seven', 'a seven', 'sevens');
-    testType(47, 8, 'eight', 'the eight', 'an eight', 'eights');
-    testType(48, 9, 'nine', 'the nine', 'a nine', 'nines');
-    testType(49, 10, 'ten', 'the ten', 'a ten', 'tens');
-    testType(50, 11, 'jack', 'the jack', 'a jack', 'jacks');
-    testType(51, 12, 'queen', 'the queen', 'a queen', 'queens');
-    testType(52, 13, 'king', 'the king', 'a king', 'kings');
+    fullTest(40, 'ace', 'an');
+    fullTest(41, 'two');
+    fullTest(42, 'three');
+    fullTest(43, 'four');
+    fullTest(44, 'five');
+    fullTest(45, 'six', 'a', 'es');
+    fullTest(46, 'seven');
+    fullTest(47, 'eight', 'an');
+    fullTest(48, 'nine');
+    fullTest(49, 'ten');
+    fullTest(50, 'jack');
+    fullTest(51, 'queen');
+    fullTest(52, 'king');
 }
 
 
-function testInvalidTypeDefaultsToJoker(): void {
-    test('type lower than 0 or higher than 52 defaults to joker', () => {
-        const rankA = new Rank(-1);
-        const rankB = new Rank(53);
-        expect(rankA.number).toBe(0);
-        expect(rankB.number).toBe(0);
+/**
+ * 
+ * UTILITY FUNCTIONS
+ */
+
+function fullTest(type: tPlayingCardType, name: string, article: string = 'a', plural: string = 's'): void {
+
+    const rank = new Rank(type);
+    describe(`card type: ${type}`, () => {
+
+        test(`rank name: ${name}`, () => {
+            EXPECT.toBe(rank.name, name);
+        });
+
+        test(`rank name with definite article (a|an): ${article} ${name}`, () => {
+            EXPECT.toBe(rank.nameDefinite, `${article} ${name}`);
+        });
+
+        test(`rank name with indefinite article (the): the ${name}`, () => {
+            EXPECT.toBe(rank.nameIndefinite, `the ${name}`);
+        });
+
+        test(`rank name plural (s|es): ${name}${plural}`, () => {
+            EXPECT.toBe(rank.namePlural, `${name}${plural}`);
+        });
+
     });
 }

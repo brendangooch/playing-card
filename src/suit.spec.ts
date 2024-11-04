@@ -1,115 +1,106 @@
 /**
- * test rank returns correct values for every type of playing card
- * 52 cards + jokers
- * values 1 - 13
+ * test suit returns correct suit values for every type of playing card
+ * 52 cards + joker
+ * 4 suits
  */
 
-import Suit from "./suit.js";
+import * as EXPECT from '@brendangooch/jest-expect';
+import { Suit } from "./suit.js";
+import { type tPlayingCardType } from './index.js';
 
-describe('Suit', () => {
-    testAll();
-});
-
+testAll();
 function testAll(): void {
-    testJoker();
-    testClubs();
-    testHearts();
-    testSpades();
-    testDiamonds();
-    testInvalidTypeDefaultsToJoker();
-}
-
-function testType(type: number, number: number, name: string): void {
-
-    const suit = new Suit(type);
-    describe(`type: ${type}`, () => {
-
-        test(`number: ${number}`, () => {
-            expect(suit.number).toBe(number);
-        });
-
-        test(`name: ${name}`, () => {
-            expect(suit.name).toBe(name);
-        });
+    describe('Suit', () => {
+        testJoker();
+        testClubs();
+        testHearts();
+        testSpades();
+        testDiamonds();
 
     });
-
 }
 
 function testJoker(): void {
-    testType(0, 0, 'joker');
+    fullTest(0, 'joker');
 }
 
 function testClubs(): void {
-    testType(1, 1, 'club');
-    testType(2, 1, 'club');
-    testType(3, 1, 'club');
-    testType(4, 1, 'club');
-    testType(5, 1, 'club');
-    testType(6, 1, 'club');
-    testType(7, 1, 'club');
-    testType(8, 1, 'club');
-    testType(9, 1, 'club');
-    testType(10, 1, 'club');
-    testType(11, 1, 'club');
-    testType(12, 1, 'club');
-    testType(13, 1, 'club');
+    fullTest(1, 'club');
+    fullTest(2, 'club');
+    fullTest(3, 'club');
+    fullTest(4, 'club');
+    fullTest(5, 'club');
+    fullTest(6, 'club');
+    fullTest(7, 'club');
+    fullTest(8, 'club');
+    fullTest(9, 'club');
+    fullTest(10, 'club');
+    fullTest(11, 'club');
+    fullTest(12, 'club');
+    fullTest(13, 'club');
 }
 
 function testHearts(): void {
-    testType(14, 2, 'heart');
-    testType(15, 2, 'heart');
-    testType(16, 2, 'heart');
-    testType(17, 2, 'heart');
-    testType(18, 2, 'heart');
-    testType(19, 2, 'heart');
-    testType(20, 2, 'heart');
-    testType(21, 2, 'heart');
-    testType(22, 2, 'heart');
-    testType(23, 2, 'heart');
-    testType(24, 2, 'heart');
-    testType(25, 2, 'heart');
-    testType(26, 2, 'heart');
+    fullTest(14, 'heart');
+    fullTest(15, 'heart');
+    fullTest(16, 'heart');
+    fullTest(17, 'heart');
+    fullTest(18, 'heart');
+    fullTest(19, 'heart');
+    fullTest(20, 'heart');
+    fullTest(21, 'heart');
+    fullTest(22, 'heart');
+    fullTest(23, 'heart');
+    fullTest(24, 'heart');
+    fullTest(25, 'heart');
+    fullTest(26, 'heart');
 }
 
 function testSpades(): void {
-    testType(27, 3, 'spade');
-    testType(28, 3, 'spade');
-    testType(29, 3, 'spade');
-    testType(30, 3, 'spade');
-    testType(31, 3, 'spade');
-    testType(32, 3, 'spade');
-    testType(33, 3, 'spade');
-    testType(34, 3, 'spade');
-    testType(35, 3, 'spade');
-    testType(36, 3, 'spade');
-    testType(37, 3, 'spade');
-    testType(38, 3, 'spade');
-    testType(39, 3, 'spade');
+    fullTest(27, 'spade');
+    fullTest(28, 'spade');
+    fullTest(29, 'spade');
+    fullTest(30, 'spade');
+    fullTest(31, 'spade');
+    fullTest(32, 'spade');
+    fullTest(33, 'spade');
+    fullTest(34, 'spade');
+    fullTest(35, 'spade');
+    fullTest(36, 'spade');
+    fullTest(37, 'spade');
+    fullTest(38, 'spade');
+    fullTest(39, 'spade');
 }
 
 function testDiamonds(): void {
-    testType(40, 4, 'diamond');
-    testType(41, 4, 'diamond');
-    testType(42, 4, 'diamond');
-    testType(43, 4, 'diamond');
-    testType(44, 4, 'diamond');
-    testType(45, 4, 'diamond');
-    testType(46, 4, 'diamond');
-    testType(47, 4, 'diamond');
-    testType(48, 4, 'diamond');
-    testType(49, 4, 'diamond');
-    testType(50, 4, 'diamond');
-    testType(51, 4, 'diamond');
-    testType(52, 4, 'diamond');
+    fullTest(40, 'diamond');
+    fullTest(41, 'diamond');
+    fullTest(42, 'diamond');
+    fullTest(43, 'diamond');
+    fullTest(44, 'diamond');
+    fullTest(45, 'diamond');
+    fullTest(46, 'diamond');
+    fullTest(47, 'diamond');
+    fullTest(48, 'diamond');
+    fullTest(49, 'diamond');
+    fullTest(50, 'diamond');
+    fullTest(51, 'diamond');
+    fullTest(52, 'diamond');
 }
 
+/**
+ * UTILITY FUNCTIONS
+ */
 
-function testInvalidTypeDefaultsToJoker(): void {
-    test('type lower than 0 or higher than 52 defaults to joker', () => {
-        const suitA = new Suit(-1);
-        const suitB = new Suit(53);
-        expect(suitA.number).toBe(0);
-        expect(suitB.number).toBe(0);
+function fullTest(type: tPlayingCardType, name: string): void {
+
+    const suit = new Suit(type);
+    describe(`card type: ${type}`, () => {
+
+        test(`suit name: ${name}`, () => {
+            EXPECT.toBe(suit.name, name);
+        });
+
     });
+
 }

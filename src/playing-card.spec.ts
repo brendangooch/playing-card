@@ -2,565 +2,677 @@
  * 
  */
 
-import PlayingCard from "./playing-card.js";
+import * as EXPECT from '@brendangooch/jest-expect';
+import { type tPlayingCardType } from './index.js';
+import { PlayingCard } from './playing-card.js';
+import { Rank } from './rank.js';
+import { Suit } from './suit.js';
 
-describe('PlayingCard', () => {
-    testAll();
-});
-
+testAll();
 function testAll(): void {
-    testAllTypes();
-    testClone();
-    testValueBetween();
-    testIsSameCard();
-    testHasSameRankAs();
-    testHasHigherRankThan();
-    testHasLowerRankThan();
-    testHasSameSuitAs();
-    testHasHigherSuitThan();
-    testHasLowerSuitThan();
-    testIsHigherThan();
+    describe('PlayingCard', () => {
+
+        testReturnsCorrectCardTypeForAllTypes();
+        testReturnsCorrectCardNameForAllTypes();
+        testReturnsCorrectDefiniteCardNameForAllTypes();
+        testReturnsCorrectIndefiniteCardNameForAllTypes();
+        testReturnsCorrectPluralCardNameForAllTypes();
+        testCorrectlyIdentifiesAJoker();
+        testClonedCardHasSamePropertiesAsOriginal();
+        testClonedCardIsNOTTheSameObjectAsOriginal();
+        testCorrectlyIdentifiesRankNumber();
+        testCorrectlyIdentifiesSuitNumber();
+        testReturnsTheCorrectNumericValueBetweenTwoCards();
+        testReturnsMinus1IfEitherValueIsJokerOnValueBetweenCall();
+        testIdentifiesIdenticalCards();
+        test2JokersAreTheSameCard();
+        testCanIdentifyCardsWithTheSameRank();
+        testCanIdentifyCardsWithAHigherRank();
+        testCanIdentifyCardsWithALowerRank();
+        testJokersCannotHaveAHigherOrLowerRankButCanBeTheSameRank();
+        testCanIdentifyCardsWithTheSameSuit();
+        testCanIdentifyCardsWithAHigherSuit();
+        testCanIdentifyCardsWithALowerSuit();
+        testJokersCannotHaveAHigherOrLowerSuitButCanBeTheSameSuit();
+        testIdentifiesAJokerAsORderedHigherThanAllOtherCards();
+        testIdentifiesCardsWithAHigherRankAreOrderedHigher();
+        testIdentifiesCardsWithTheSameRankAndAHigherSuitAreOrderedHigher();
+        testIdentifiesAllOtherCardsAsNOTBeingOrderedHigher();
+
+    });
+
 }
 
-function testType(type: number, name: string, definite: string, indefinite: string, plural: string, isJoker: boolean): void {
-    const card = new PlayingCard(type);
-    describe(`testing type: ${type}`, () => {
-        testGetType(card, type);
-        testGetName(card, name);
-        testGetNameDefinite(card, definite);
-        testGetNameIndefinite(card, indefinite);
-        testGetNamePlural(card, plural);
-        testIsJoker(card, isJoker);
-        testIsRank(card);
-        testIsSuit(card);
+// get type(): number
+function testReturnsCorrectCardTypeForAllTypes(): void {
+    test('returns correct card type for all types', () => {
+        for (let type = 0; type <= 52; type++) {
+            const card = new PlayingCard(<tPlayingCardType>type);
+            EXPECT.toBe(card.type, type);
+        }
     });
 }
 
-function testGetType(card: PlayingCard, type: number): void {
-    test(`type: ${type}`, () => {
-        expect(card.type).toBe(type);
-    });
-}
+// get name(): string
+function testReturnsCorrectCardNameForAllTypes(): void {
+    describe('returns correct card name for all types', () => {
 
-function testGetName(card: PlayingCard, name: string): void {
-    test(`name: ${name}`, () => {
-        expect(card.name).toBe(name);
-    });
-}
+        testCardName(0, 'joker');
 
-function testGetNameDefinite(card: PlayingCard, definite: string): void {
-    test(`name with definite article: ${definite}`, () => {
-        expect(card.nameDefinite).toBe(definite);
-    });
-}
+        testCardName(1, 'ace of clubs');
+        testCardName(2, 'two of clubs');
+        testCardName(3, 'three of clubs');
+        testCardName(4, 'four of clubs');
+        testCardName(5, 'five of clubs');
+        testCardName(6, 'six of clubs');
+        testCardName(7, 'seven of clubs');
+        testCardName(8, 'eight of clubs');
+        testCardName(9, 'nine of clubs');
+        testCardName(10, 'ten of clubs');
+        testCardName(11, 'jack of clubs');
+        testCardName(12, 'queen of clubs');
+        testCardName(13, 'king of clubs');
 
-function testGetNameIndefinite(card: PlayingCard, indefinite: string): void {
-    test(`name with indefinite article: ${indefinite}`, () => {
-        expect(card.nameIndefinite).toBe(indefinite);
-    });
-}
+        testCardName(14, 'ace of hearts');
+        testCardName(15, 'two of hearts');
+        testCardName(16, 'three of hearts');
+        testCardName(17, 'four of hearts');
+        testCardName(18, 'five of hearts');
+        testCardName(19, 'six of hearts');
+        testCardName(20, 'seven of hearts');
+        testCardName(21, 'eight of hearts');
+        testCardName(22, 'nine of hearts');
+        testCardName(23, 'ten of hearts');
+        testCardName(24, 'jack of hearts');
+        testCardName(25, 'queen of hearts');
+        testCardName(26, 'king of hearts');
 
-function testGetNamePlural(card: PlayingCard, plural: string): void {
-    test(`name plural: ${plural}`, () => {
-        expect(card.namePlural).toBe(plural);
-    });
-}
+        testCardName(27, 'ace of spades');
+        testCardName(28, 'two of spades');
+        testCardName(29, 'three of spades');
+        testCardName(30, 'four of spades');
+        testCardName(31, 'five of spades');
+        testCardName(32, 'six of spades');
+        testCardName(33, 'seven of spades');
+        testCardName(34, 'eight of spades');
+        testCardName(35, 'nine of spades');
+        testCardName(36, 'ten of spades');
+        testCardName(37, 'jack of spades');
+        testCardName(38, 'queen of spades');
+        testCardName(39, 'king of spades');
 
-function testIsJoker(card: PlayingCard, isJoker: boolean): void {
-    test(`isJoker(): ${isJoker}`, () => {
-        expect(card.isJoker()).toBe(isJoker);
-    });
-}
-
-function testIsRank(card: PlayingCard): void {
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13].forEach((i) => {
-        test(`isRank(${i}): ${i === card.rank.number}`, () => {
-            if (i === card.rank.number) expect(card.isRank(i)).toBeTruthy();
-            else expect(card.isRank(i)).not.toBeTruthy();
-        });
-    });
-}
-
-function testIsSuit(card: PlayingCard): void {
-    [1, 2, 3, 4].forEach((i) => {
-        test(`isSuit(${i}): ${i === card.suit.number}`, () => {
-            if (i === card.suit.number) expect(card.isSuit(i)).toBeTruthy();
-            else expect(card.isSuit(i)).not.toBeTruthy();
-        });
-    });
-}
-
-
-function testAllTypes(): void {
-    testInvalidTypes();
-    testJoker();
-    testClubs();
-    testHearts();
-    testSpades();
-    testDiamonds();
-}
-
-function testInvalidTypes(): void {
-    describe('invalid types > 52 || < 0 default to a joker', () => {
-
-        test('type: -1 defaults to joker', () => {
-            const card = new PlayingCard(-1);
-            expect(card.isJoker()).toBeTruthy();
-        });
-
-        test('type: 53 defaults to joker', () => {
-            const card = new PlayingCard(53);
-            expect(card.isJoker()).toBeTruthy();
-        });
+        testCardName(40, 'ace of diamonds');
+        testCardName(41, 'two of diamonds');
+        testCardName(42, 'three of diamonds');
+        testCardName(43, 'four of diamonds');
+        testCardName(44, 'five of diamonds');
+        testCardName(45, 'six of diamonds');
+        testCardName(46, 'seven of diamonds');
+        testCardName(47, 'eight of diamonds');
+        testCardName(48, 'nine of diamonds');
+        testCardName(49, 'ten of diamonds');
+        testCardName(50, 'jack of diamonds');
+        testCardName(51, 'queen of diamonds');
+        testCardName(52, 'king of diamonds');
 
     });
 }
 
-function testJoker(): void {
-    testType(0, 'joker', 'a joker', 'the joker', 'jokers', true);
+// get nameDefinite(): string
+function testReturnsCorrectDefiniteCardNameForAllTypes(): void {
+    describe('returns correct definite card name for all types', () => {
+
+        testDefiniteCardName(0, 'a joker');
+
+        testDefiniteCardName(1, 'an ace of clubs');
+        testDefiniteCardName(2, 'a two of clubs');
+        testDefiniteCardName(3, 'a three of clubs');
+        testDefiniteCardName(4, 'a four of clubs');
+        testDefiniteCardName(5, 'a five of clubs');
+        testDefiniteCardName(6, 'a six of clubs');
+        testDefiniteCardName(7, 'a seven of clubs');
+        testDefiniteCardName(8, 'an eight of clubs');
+        testDefiniteCardName(9, 'a nine of clubs');
+        testDefiniteCardName(10, 'a ten of clubs');
+        testDefiniteCardName(11, 'a jack of clubs');
+        testDefiniteCardName(12, 'a queen of clubs');
+        testDefiniteCardName(13, 'a king of clubs');
+
+        testDefiniteCardName(14, 'an ace of hearts');
+        testDefiniteCardName(15, 'a two of hearts');
+        testDefiniteCardName(16, 'a three of hearts');
+        testDefiniteCardName(17, 'a four of hearts');
+        testDefiniteCardName(18, 'a five of hearts');
+        testDefiniteCardName(19, 'a six of hearts');
+        testDefiniteCardName(20, 'a seven of hearts');
+        testDefiniteCardName(21, 'an eight of hearts');
+        testDefiniteCardName(22, 'a nine of hearts');
+        testDefiniteCardName(23, 'a ten of hearts');
+        testDefiniteCardName(24, 'a jack of hearts');
+        testDefiniteCardName(25, 'a queen of hearts');
+        testDefiniteCardName(26, 'a king of hearts');
+
+        testDefiniteCardName(27, 'an ace of spades');
+        testDefiniteCardName(28, 'a two of spades');
+        testDefiniteCardName(29, 'a three of spades');
+        testDefiniteCardName(30, 'a four of spades');
+        testDefiniteCardName(31, 'a five of spades');
+        testDefiniteCardName(32, 'a six of spades');
+        testDefiniteCardName(33, 'a seven of spades');
+        testDefiniteCardName(34, 'an eight of spades');
+        testDefiniteCardName(35, 'a nine of spades');
+        testDefiniteCardName(36, 'a ten of spades');
+        testDefiniteCardName(37, 'a jack of spades');
+        testDefiniteCardName(38, 'a queen of spades');
+        testDefiniteCardName(39, 'a king of spades');
+
+        testDefiniteCardName(40, 'an ace of diamonds');
+        testDefiniteCardName(41, 'a two of diamonds');
+        testDefiniteCardName(42, 'a three of diamonds');
+        testDefiniteCardName(43, 'a four of diamonds');
+        testDefiniteCardName(44, 'a five of diamonds');
+        testDefiniteCardName(45, 'a six of diamonds');
+        testDefiniteCardName(46, 'a seven of diamonds');
+        testDefiniteCardName(47, 'an eight of diamonds');
+        testDefiniteCardName(48, 'a nine of diamonds');
+        testDefiniteCardName(49, 'a ten of diamonds');
+        testDefiniteCardName(50, 'a jack of diamonds');
+        testDefiniteCardName(51, 'a queen of diamonds');
+        testDefiniteCardName(52, 'a king of diamonds');
+
+    });
 }
 
-function testClubs(): void {
-    testType(1, 'ace of clubs', 'an ace of clubs', 'the ace of clubs', 'aces of clubs', false);
-    testType(2, 'two of clubs', 'a two of clubs', 'the two of clubs', 'twos of clubs', false);
-    testType(3, 'three of clubs', 'a three of clubs', 'the three of clubs', 'threes of clubs', false);
-    testType(4, 'four of clubs', 'a four of clubs', 'the four of clubs', 'fours of clubs', false);
-    testType(5, 'five of clubs', 'a five of clubs', 'the five of clubs', 'fives of clubs', false);
-    testType(6, 'six of clubs', 'a six of clubs', 'the six of clubs', 'sixes of clubs', false);
-    testType(7, 'seven of clubs', 'a seven of clubs', 'the seven of clubs', 'sevens of clubs', false);
-    testType(8, 'eight of clubs', 'an eight of clubs', 'the eight of clubs', 'eights of clubs', false);
-    testType(9, 'nine of clubs', 'a nine of clubs', 'the nine of clubs', 'nines of clubs', false);
-    testType(10, 'ten of clubs', 'a ten of clubs', 'the ten of clubs', 'tens of clubs', false);
-    testType(11, 'jack of clubs', 'a jack of clubs', 'the jack of clubs', 'jacks of clubs', false);
-    testType(12, 'queen of clubs', 'a queen of clubs', 'the queen of clubs', 'queens of clubs', false);
-    testType(13, 'king of clubs', 'a king of clubs', 'the king of clubs', 'kings of clubs', false);
+// get nameIndefinite(): string
+function testReturnsCorrectIndefiniteCardNameForAllTypes(): void {
+    describe('returns correct indefinite card name for all types', () => {
+
+        testIndefiniteCardName(0, 'the joker');
+
+        testIndefiniteCardName(1, 'the ace of clubs');
+        testIndefiniteCardName(2, 'the two of clubs');
+        testIndefiniteCardName(3, 'the three of clubs');
+        testIndefiniteCardName(4, 'the four of clubs');
+        testIndefiniteCardName(5, 'the five of clubs');
+        testIndefiniteCardName(6, 'the six of clubs');
+        testIndefiniteCardName(7, 'the seven of clubs');
+        testIndefiniteCardName(8, 'the eight of clubs');
+        testIndefiniteCardName(9, 'the nine of clubs');
+        testIndefiniteCardName(10, 'the ten of clubs');
+        testIndefiniteCardName(11, 'the jack of clubs');
+        testIndefiniteCardName(12, 'the queen of clubs');
+        testIndefiniteCardName(13, 'the king of clubs');
+
+        testIndefiniteCardName(14, 'the ace of hearts');
+        testIndefiniteCardName(15, 'the two of hearts');
+        testIndefiniteCardName(16, 'the three of hearts');
+        testIndefiniteCardName(17, 'the four of hearts');
+        testIndefiniteCardName(18, 'the five of hearts');
+        testIndefiniteCardName(19, 'the six of hearts');
+        testIndefiniteCardName(20, 'the seven of hearts');
+        testIndefiniteCardName(21, 'the eight of hearts');
+        testIndefiniteCardName(22, 'the nine of hearts');
+        testIndefiniteCardName(23, 'the ten of hearts');
+        testIndefiniteCardName(24, 'the jack of hearts');
+        testIndefiniteCardName(25, 'the queen of hearts');
+        testIndefiniteCardName(26, 'the king of hearts');
+
+        testIndefiniteCardName(27, 'the ace of spades');
+        testIndefiniteCardName(28, 'the two of spades');
+        testIndefiniteCardName(29, 'the three of spades');
+        testIndefiniteCardName(30, 'the four of spades');
+        testIndefiniteCardName(31, 'the five of spades');
+        testIndefiniteCardName(32, 'the six of spades');
+        testIndefiniteCardName(33, 'the seven of spades');
+        testIndefiniteCardName(34, 'the eight of spades');
+        testIndefiniteCardName(35, 'the nine of spades');
+        testIndefiniteCardName(36, 'the ten of spades');
+        testIndefiniteCardName(37, 'the jack of spades');
+        testIndefiniteCardName(38, 'the queen of spades');
+        testIndefiniteCardName(39, 'the king of spades');
+
+        testIndefiniteCardName(40, 'the ace of diamonds');
+        testIndefiniteCardName(41, 'the two of diamonds');
+        testIndefiniteCardName(42, 'the three of diamonds');
+        testIndefiniteCardName(43, 'the four of diamonds');
+        testIndefiniteCardName(44, 'the five of diamonds');
+        testIndefiniteCardName(45, 'the six of diamonds');
+        testIndefiniteCardName(46, 'the seven of diamonds');
+        testIndefiniteCardName(47, 'the eight of diamonds');
+        testIndefiniteCardName(48, 'the nine of diamonds');
+        testIndefiniteCardName(49, 'the ten of diamonds');
+        testIndefiniteCardName(50, 'the jack of diamonds');
+        testIndefiniteCardName(51, 'the queen of diamonds');
+        testIndefiniteCardName(52, 'the king of diamonds');
+
+    });
 }
 
-function testHearts(): void {
-    testType(14, 'ace of hearts', 'an ace of hearts', 'the ace of hearts', 'aces of hearts', false);
-    testType(15, 'two of hearts', 'a two of hearts', 'the two of hearts', 'twos of hearts', false);
-    testType(16, 'three of hearts', 'a three of hearts', 'the three of hearts', 'threes of hearts', false);
-    testType(17, 'four of hearts', 'a four of hearts', 'the four of hearts', 'fours of hearts', false);
-    testType(18, 'five of hearts', 'a five of hearts', 'the five of hearts', 'fives of hearts', false);
-    testType(19, 'six of hearts', 'a six of hearts', 'the six of hearts', 'sixes of hearts', false);
-    testType(20, 'seven of hearts', 'a seven of hearts', 'the seven of hearts', 'sevens of hearts', false);
-    testType(21, 'eight of hearts', 'an eight of hearts', 'the eight of hearts', 'eights of hearts', false);
-    testType(22, 'nine of hearts', 'a nine of hearts', 'the nine of hearts', 'nines of hearts', false);
-    testType(23, 'ten of hearts', 'a ten of hearts', 'the ten of hearts', 'tens of hearts', false);
-    testType(24, 'jack of hearts', 'a jack of hearts', 'the jack of hearts', 'jacks of hearts', false);
-    testType(25, 'queen of hearts', 'a queen of hearts', 'the queen of hearts', 'queens of hearts', false);
-    testType(26, 'king of hearts', 'a king of hearts', 'the king of hearts', 'kings of hearts', false);
+// get namePlural(): string
+function testReturnsCorrectPluralCardNameForAllTypes(): void {
+    describe('returns correct plural card name for all types', () => {
+
+        testPluralCardName(0, 'jokers');
+
+        testPluralCardName(1, 'aces of clubs');
+        testPluralCardName(2, 'twos of clubs');
+        testPluralCardName(3, 'threes of clubs');
+        testPluralCardName(4, 'fours of clubs');
+        testPluralCardName(5, 'fives of clubs');
+        testPluralCardName(6, 'sixes of clubs');
+        testPluralCardName(7, 'sevens of clubs');
+        testPluralCardName(8, 'eights of clubs');
+        testPluralCardName(9, 'nines of clubs');
+        testPluralCardName(10, 'tens of clubs');
+        testPluralCardName(11, 'jacks of clubs');
+        testPluralCardName(12, 'queens of clubs');
+        testPluralCardName(13, 'kings of clubs');
+
+        testPluralCardName(14, 'aces of hearts');
+        testPluralCardName(15, 'twos of hearts');
+        testPluralCardName(16, 'threes of hearts');
+        testPluralCardName(17, 'fours of hearts');
+        testPluralCardName(18, 'fives of hearts');
+        testPluralCardName(19, 'sixes of hearts');
+        testPluralCardName(20, 'sevens of hearts');
+        testPluralCardName(21, 'eights of hearts');
+        testPluralCardName(22, 'nines of hearts');
+        testPluralCardName(23, 'tens of hearts');
+        testPluralCardName(24, 'jacks of hearts');
+        testPluralCardName(25, 'queens of hearts');
+        testPluralCardName(26, 'kings of hearts');
+
+        testPluralCardName(27, 'aces of spades');
+        testPluralCardName(28, 'twos of spades');
+        testPluralCardName(29, 'threes of spades');
+        testPluralCardName(30, 'fours of spades');
+        testPluralCardName(31, 'fives of spades');
+        testPluralCardName(32, 'sixes of spades');
+        testPluralCardName(33, 'sevens of spades');
+        testPluralCardName(34, 'eights of spades');
+        testPluralCardName(35, 'nines of spades');
+        testPluralCardName(36, 'tens of spades');
+        testPluralCardName(37, 'jacks of spades');
+        testPluralCardName(38, 'queens of spades');
+        testPluralCardName(39, 'kings of spades');
+
+        testPluralCardName(40, 'aces of diamonds');
+        testPluralCardName(41, 'twos of diamonds');
+        testPluralCardName(42, 'threes of diamonds');
+        testPluralCardName(43, 'fours of diamonds');
+        testPluralCardName(44, 'fives of diamonds');
+        testPluralCardName(45, 'sixes of diamonds');
+        testPluralCardName(46, 'sevens of diamonds');
+        testPluralCardName(47, 'eights of diamonds');
+        testPluralCardName(48, 'nines of diamonds');
+        testPluralCardName(49, 'tens of diamonds');
+        testPluralCardName(50, 'jacks of diamonds');
+        testPluralCardName(51, 'queens of diamonds');
+        testPluralCardName(52, 'kings of diamonds');
+
+    });
 }
 
-function testSpades(): void {
-    testType(27, 'ace of spades', 'an ace of spades', 'the ace of spades', 'aces of spades', false);
-    testType(28, 'two of spades', 'a two of spades', 'the two of spades', 'twos of spades', false);
-    testType(29, 'three of spades', 'a three of spades', 'the three of spades', 'threes of spades', false);
-    testType(30, 'four of spades', 'a four of spades', 'the four of spades', 'fours of spades', false);
-    testType(31, 'five of spades', 'a five of spades', 'the five of spades', 'fives of spades', false);
-    testType(32, 'six of spades', 'a six of spades', 'the six of spades', 'sixes of spades', false);
-    testType(33, 'seven of spades', 'a seven of spades', 'the seven of spades', 'sevens of spades', false);
-    testType(34, 'eight of spades', 'an eight of spades', 'the eight of spades', 'eights of spades', false);
-    testType(35, 'nine of spades', 'a nine of spades', 'the nine of spades', 'nines of spades', false);
-    testType(36, 'ten of spades', 'a ten of spades', 'the ten of spades', 'tens of spades', false);
-    testType(37, 'jack of spades', 'a jack of spades', 'the jack of spades', 'jacks of spades', false);
-    testType(38, 'queen of spades', 'a queen of spades', 'the queen of spades', 'queens of spades', false);
-    testType(39, 'king of spades', 'a king of spades', 'the king of spades', 'kings of spades', false);
+// isJoker(): boolean
+function testCorrectlyIdentifiesAJoker(): void {
+    test('correctly identifies a joker', () => {
+        for (let type = 0; type <= 52; type++) {
+            const card = new PlayingCard(<tPlayingCardType>type);
+            if (type === 0) EXPECT.truthy(card.isJoker);
+            else EXPECT.falsy(card.isJoker);
+        }
+    });
 }
 
-function testDiamonds(): void {
-    testType(40, 'ace of diamonds', 'an ace of diamonds', 'the ace of diamonds', 'aces of diamonds', false);
-    testType(41, 'two of diamonds', 'a two of diamonds', 'the two of diamonds', 'twos of diamonds', false);
-    testType(42, 'three of diamonds', 'a three of diamonds', 'the three of diamonds', 'threes of diamonds', false);
-    testType(43, 'four of diamonds', 'a four of diamonds', 'the four of diamonds', 'fours of diamonds', false);
-    testType(44, 'five of diamonds', 'a five of diamonds', 'the five of diamonds', 'fives of diamonds', false);
-    testType(45, 'six of diamonds', 'a six of diamonds', 'the six of diamonds', 'sixes of diamonds', false);
-    testType(46, 'seven of diamonds', 'a seven of diamonds', 'the seven of diamonds', 'sevens of diamonds', false);
-    testType(47, 'eight of diamonds', 'an eight of diamonds', 'the eight of diamonds', 'eights of diamonds', false);
-    testType(48, 'nine of diamonds', 'a nine of diamonds', 'the nine of diamonds', 'nines of diamonds', false);
-    testType(49, 'ten of diamonds', 'a ten of diamonds', 'the ten of diamonds', 'tens of diamonds', false);
-    testType(50, 'jack of diamonds', 'a jack of diamonds', 'the jack of diamonds', 'jacks of diamonds', false);
-    testType(51, 'queen of diamonds', 'a queen of diamonds', 'the queen of diamonds', 'queens of diamonds', false);
-    testType(52, 'king of diamonds', 'a king of diamonds', 'the king of diamonds', 'kings of diamonds', false);
+// clone(): PlayingCard
+function testClonedCardHasSamePropertiesAsOriginal(): void {
+    test('cloned card has same properties as original', () => {
+        for (let type = 0; type <= 52; type++) {
+            const original = new PlayingCard(<tPlayingCardType>type);
+            const clone = original.clone();
+            EXPECT.toBe(clone.type, original.type);
+            EXPECT.toBe(clone.name, original.name);
+            EXPECT.truthy(clone.isSameCardAs(original));
+            EXPECT.truthy(original.isSameCardAs(original));
+            EXPECT.truthy(clone.hasSameRankAs(original));
+            EXPECT.truthy(original.hasSameRankAs(original));
+            EXPECT.truthy(clone.hasSameSuitAs(original));
+            EXPECT.truthy(original.hasSameSuitAs(original));
+        }
+    });
 }
 
+function testClonedCardIsNOTTheSameObjectAsOriginal(): void {
+    test('cloned card is not the same object as original', () => {
+        const card = new PlayingCard(10);
+        const clone = card.clone();
+        EXPECT.falsy(card === clone);
+    });
+}
 
-function testClone(): void {
-    describe('clone()', () => {
+// isRankNumber(rank: number): boolean
+function testCorrectlyIdentifiesRankNumber(): void {
+    test('correctly identifies rank number', () => {
+        for (let type = 0; type <= 52; type++) {
+            const card = new PlayingCard(<tPlayingCardType>type);
+            const rank = new Rank(<tPlayingCardType>type);
+            EXPECT.truthy(card.isRankNumber(rank.number));
+        }
+    });
+}
 
-        test('cloned card has same rank and suit as original', () => {
-            for (let type = 0; type <= 52; type++) {
-                const original = new PlayingCard(type);
-                const clone = original.clone();
-                expect(original.rank.number).toBe(clone.rank.number);
-                expect(original.suit.number).toBe(clone.suit.number);
+// isSuitNumber(suit: number): boolean
+function testCorrectlyIdentifiesSuitNumber(): void {
+    test('correctly identifies suit number', () => {
+        for (let type = 0; type <= 52; type++) {
+            const card = new PlayingCard(<tPlayingCardType>type);
+            const suit = new Suit(<tPlayingCardType>type);
+            EXPECT.truthy(card.isSuitNumber(suit.number));
+        }
+    });
+}
+
+// valueBetweenRanks(other: PlayingCard): number
+function testReturnsTheCorrectNumericValueBetweenTwoCards(): void {
+    test('returns the correct numeric value between two cards', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                const rank1 = new Rank(<tPlayingCardType>t1);
+                const rank2 = new Rank(<tPlayingCardType>t2);
+                const valueBetween = Math.abs(rank1.number - rank2.number);
+                EXPECT.toBe(card1.valueBetweenRanks(card2), valueBetween);
+                EXPECT.toBe(card2.valueBetweenRanks(card1), valueBetween);
             }
-        });
-
-        test('cloned card is NOT the same object as the original', () => {
-            for (let type = 0; type <= 52; type++) {
-                const original = new PlayingCard(type);
-                const notCloned = original;
-                const clone = original.clone();
-                expect(original === notCloned).toBeTruthy();
-                expect(original === clone).not.toBeTruthy();
-            }
-        });
-
+        }
     });
 }
 
-function testValueBetween(): void {
-
-    describe('valueBetween()', () => {
-
-        test('returns -1 if either card is a joker', () => {
-            const joker = new PlayingCard(0);
-            for (let t = 0; t <= 52; t++) {
-                const other = new PlayingCard(52);
-                expect(joker.valueBetween(other)).toBe(-1);
-                expect(other.valueBetween(joker)).toBe(-1);
+function testReturnsMinus1IfEitherValueIsJokerOnValueBetweenCall(): void {
+    test('returns minus 1 if either value is joker on valueBetweenRanks() call', () => {
+        for (let t1 = 0; t1 <= 52; t1++) {
+            for (let t2 = 0; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.isJoker) EXPECT.toBe(card1.valueBetweenRanks(card2), -1);
+                if (card1.isJoker) EXPECT.toBe(card2.valueBetweenRanks(card1), -1);
+                if (card2.isJoker) EXPECT.toBe(card1.valueBetweenRanks(card2), -1);
+                if (card2.isJoker) EXPECT.toBe(card2.valueBetweenRanks(card1), -1);
             }
-        });
+        }
+    });
+}
 
-        test('ace is LOW', () => {
-            const aceOfClubs = new PlayingCard(1);
-            const twoOfClubs = new PlayingCard(2);
-            const kingOfClubs = new PlayingCard(13);
-            expect(aceOfClubs.valueBetween(twoOfClubs)).toBe(1);
-            expect(twoOfClubs.valueBetween(aceOfClubs)).toBe(1);
-            expect(aceOfClubs.valueBetween(kingOfClubs)).toBe(12);
-            expect(kingOfClubs.valueBetween(aceOfClubs)).toBe(12);
-        });
-
-        test('returns the absolute value (value >= 0) between the 2 card ranks', () => {
-            for (let v1 = 1; v1 <= 13; v1++) {
-                for (let v2 = 1; v2 <= 13; v2++) {
-                    const card1 = new PlayingCard(v1);
-                    const card2 = new PlayingCard(v2);
-                    expect(card1.valueBetween(card2) >= 0).toBeTruthy();
-                    expect(card2.valueBetween(card1) >= 0).toBeTruthy();
+// isSameCard(other: PlayingCard): boolean
+function testIdentifiesIdenticalCards(): void {
+    test('can identify identical cards', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.rank.number === card2.rank.number && card1.suit.number === card2.suit.number) {
+                    EXPECT.truthy(card1.isSameCardAs(card2));
+                    EXPECT.truthy(card2.isSameCardAs(card1));
+                }
+                else {
+                    EXPECT.falsy(card1.isSameCardAs(card2));
+                    EXPECT.falsy(card2.isSameCardAs(card1));
                 }
             }
-        });
-
-        test('returns correct value between every possible combination of values (1 - 13)', () => {
-            for (let v1 = 1; v1 <= 13; v1++) {
-                for (let v2 = 1; v2 <= 13; v2++) {
-                    const card1 = new PlayingCard(v1);
-                    const card2 = new PlayingCard(v2);
-                    expect(card1.valueBetween(card2)).toBe(Math.abs(v1 - v2));
-                    expect(card2.valueBetween(card1)).toBe(Math.abs(v1 - v2));
-                }
-            }
-        });
-
+        }
     });
-
 }
 
-function testIsSameCard(): void {
-
-    describe('isSameCard()', () => {
-
-        test('cards of every type match with each other', () => {
-            for (let t = 0; t <= 52; t++) {
-                const cardA = new PlayingCard(t);
-                const cardB = new PlayingCard(t);
-                expect(cardA.isSameCard(cardB)).toBeTruthy();
-                expect(cardB.isSameCard(cardA)).toBeTruthy();
-            }
-        });
-
-        test('matches ONLY identical cards and no others', () => {
-            for (let t1 = 0; t1 <= 52; t1++) {
-                for (let t2 = 0; t2 <= 52; t2++) {
-                    const cardA = new PlayingCard(t1);
-                    const cardB = new PlayingCard(t2);
-                    if (cardA.rank.number === cardB.rank.number && cardA.suit.number === cardB.suit.number) {
-                        expect(cardA.isSameCard(cardB)).toBeTruthy();
-                        expect(cardB.isSameCard(cardA)).toBeTruthy();
-                    }
-                    else {
-                        expect(cardA.isSameCard(cardB)).not.toBeTruthy();
-                        expect(cardB.isSameCard(cardA)).not.toBeTruthy();
-                    }
-                }
-            }
-        });
-
+function test2JokersAreTheSameCard(): void {
+    test('2 jokers are the same card', () => {
+        const joker1 = new PlayingCard(0);
+        const joker2 = new PlayingCard(0);
+        EXPECT.truthy(joker1.isSameCardAs(joker2));
+        EXPECT.truthy(joker2.isSameCardAs(joker1));
     });
-
 }
 
-function testHasSameRankAs(): void {
-
-    describe('hasSameRankAs()', () => {
-
-        test('matches ONLY cards with the same rank and no others', () => {
-            for (let t1 = 0; t1 <= 52; t1++) {
-                for (let t2 = 0; t2 <= 52; t2++) {
-                    const cardA = new PlayingCard(t1);
-                    const cardB = new PlayingCard(t2);
-                    if (cardA.rank.number === cardB.rank.number) {
-                        expect(cardA.hasSameRankAs(cardB)).toBeTruthy();
-                        expect(cardB.hasSameRankAs(cardA)).toBeTruthy();
-                    }
-                    else {
-                        expect(cardA.hasSameRankAs(cardB)).not.toBeTruthy();
-                        expect(cardB.hasSameRankAs(cardA)).not.toBeTruthy();
-                    }
+// hasSameRankAs(other: PlayingCard): boolean
+function testCanIdentifyCardsWithTheSameRank(): void {
+    test('can identify cards with the same rank', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.rank.number === card2.rank.number) {
+                    EXPECT.truthy(card1.hasSameRankAs(card2));
+                    EXPECT.truthy(card2.hasSameRankAs(card1));
+                }
+                else {
+                    EXPECT.falsy(card1.hasSameRankAs(card2));
+                    EXPECT.falsy(card2.hasSameRankAs(card1));
                 }
             }
-        });
-
+        }
     });
-
 }
 
-function testHasHigherRankThan(): void {
-
-    describe('hasHigherRankThan()', () => {
-
-        test('if either card is a joker, returns false', () => {
-            const joker = new PlayingCard(0);
-            for (let t = 0; t <= 52; t++) {
-                const other = new PlayingCard(t);
-                expect(joker.hasHigherRankThan(other)).toBeFalsy();
-                expect(other.hasHigherRankThan(joker)).toBeFalsy();
-            }
-        });
-
-        test('ace is LOW', () => {
-            const aceOfDiamonds = new PlayingCard(40);
-            const twoOfDiamonds = new PlayingCard(41);
-            const kingOfDiamonds = new PlayingCard(52);
-            expect(aceOfDiamonds.hasHigherRankThan(twoOfDiamonds)).not.toBeTruthy();
-            expect(twoOfDiamonds.hasHigherRankThan(aceOfDiamonds)).toBeTruthy();
-            expect(aceOfDiamonds.hasHigherRankThan(kingOfDiamonds)).not.toBeTruthy();
-            expect(kingOfDiamonds.hasHigherRankThan(aceOfDiamonds)).toBeTruthy();
-        });
-
-        test('matches ONLY against cards with a lower rank', () => {
-            for (let t1 = 1; t1 <= 52; t1++) {
-                for (let t2 = 1; t2 <= 52; t2++) {
-                    const cardA = new PlayingCard(t1);
-                    const cardB = new PlayingCard(t2);
-                    if (cardA.rank.number > cardB.rank.number) {
-                        expect(cardA.hasHigherRankThan(cardB)).toBeTruthy();
-                        expect(cardB.hasHigherRankThan(cardA)).not.toBeTruthy();
-                    }
-                    else if (cardA.rank.number < cardB.rank.number) {
-                        expect(cardA.hasHigherRankThan(cardB)).not.toBeTruthy();
-                        expect(cardB.hasHigherRankThan(cardA)).toBeTruthy();
-                    }
+// hasHigherRankThan(other: PlayingCard): boolean
+function testCanIdentifyCardsWithAHigherRank(): void {
+    test('can identify cards with a higher rank', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.rank.number > card2.rank.number) {
+                    EXPECT.truthy(card1.hasHigherRankThan(card2));
+                    EXPECT.falsy(card2.hasHigherRankThan(card1));
+                }
+                if (card2.rank.number > card1.rank.number) {
+                    EXPECT.truthy(card2.hasHigherRankThan(card1));
+                    EXPECT.falsy(card1.hasHigherRankThan(card2));
                 }
             }
-        });
-
+        }
     });
-
 }
 
-function testHasLowerRankThan(): void {
-
-    describe('hasLowerRankThan()', () => {
-
-        test('if either card is a joker, returns false', () => {
-            const joker = new PlayingCard(0);
-            for (let t = 0; t <= 52; t++) {
-                const other = new PlayingCard(t);
-                expect(joker.hasLowerRankThan(other)).toBeFalsy();
-                expect(other.hasLowerRankThan(joker)).toBeFalsy();
-            }
-        });
-
-        test('ace is LOW', () => {
-            const aceOfDiamonds = new PlayingCard(40);
-            const twoOfDiamonds = new PlayingCard(41);
-            const kingOfDiamonds = new PlayingCard(52);
-            expect(aceOfDiamonds.hasLowerRankThan(twoOfDiamonds)).toBeTruthy();
-            expect(twoOfDiamonds.hasLowerRankThan(aceOfDiamonds)).not.toBeTruthy();
-            expect(aceOfDiamonds.hasLowerRankThan(kingOfDiamonds)).toBeTruthy();
-            expect(kingOfDiamonds.hasLowerRankThan(aceOfDiamonds)).not.toBeTruthy();
-        });
-
-        test('matches ONLY against cards with a higher rank', () => {
-            for (let t1 = 1; t1 <= 52; t1++) {
-                for (let t2 = 1; t2 <= 52; t2++) {
-                    const cardA = new PlayingCard(t1);
-                    const cardB = new PlayingCard(t2);
-                    if (cardA.rank.number < cardB.rank.number) {
-                        expect(cardA.hasLowerRankThan(cardB)).toBeTruthy();
-                        expect(cardB.hasLowerRankThan(cardA)).not.toBeTruthy();
-                    }
-                    else if (cardA.rank.number > cardB.rank.number) {
-                        expect(cardA.hasLowerRankThan(cardB)).not.toBeTruthy();
-                        expect(cardB.hasLowerRankThan(cardA)).toBeTruthy();
-                    }
+// hasLowerRankThan(other: PlayingCard): boolean
+function testCanIdentifyCardsWithALowerRank(): void {
+    test('can identify cards with a lower rank', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.rank.number < card2.rank.number) {
+                    EXPECT.truthy(card1.hasLowerRankThan(card2));
+                    EXPECT.falsy(card2.hasLowerRankThan(card1));
+                }
+                if (card2.rank.number < card1.rank.number) {
+                    EXPECT.truthy(card2.hasLowerRankThan(card1));
+                    EXPECT.falsy(card1.hasLowerRankThan(card2));
                 }
             }
-        });
-
+        }
     });
+}
 
+function testJokersCannotHaveAHigherOrLowerRankButCanBeTheSameRank(): void {
+    test('jokers cannot have a higher or lower rank but can be the same rank', () => {
+        const joker1 = new PlayingCard(0);
+        const joker2 = new PlayingCard(0);
+        EXPECT.falsy(joker1.hasHigherRankThan(joker2));
+        EXPECT.falsy(joker2.hasHigherRankThan(joker1));
+        EXPECT.falsy(joker1.hasLowerRankThan(joker2));
+        EXPECT.falsy(joker2.hasLowerRankThan(joker1));
+        EXPECT.truthy(joker1.hasSameRankAs(joker2));
+        EXPECT.truthy(joker2.hasSameRankAs(joker1));
+    });
 }
 
 // hasSameSuitAs(other: PlayingCard): boolean
-function testHasSameSuitAs(): void {
-    describe('hasSameSuitAs()', () => {
-        test('matches ONLY cards with the same suit and no others', () => {
-            for (let t1 = 0; t1 <= 52; t1++) {
-                for (let t2 = 0; t2 <= 52; t2++) {
-                    const cardA = new PlayingCard(t1);
-                    const cardB = new PlayingCard(t2);
-                    if (cardA.suit.number === cardB.suit.number) {
-                        expect(cardA.hasSameSuitAs(cardB)).toBeTruthy();
-                        expect(cardB.hasSameSuitAs(cardA)).toBeTruthy();
-                    }
-                    else {
-                        expect(cardA.hasSameSuitAs(cardB)).not.toBeTruthy();
-                        expect(cardB.hasSameSuitAs(cardA)).not.toBeTruthy();
-                    }
+function testCanIdentifyCardsWithTheSameSuit(): void {
+    test('can identify cards with the same suit', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.suit.number === card2.suit.number) {
+                    EXPECT.truthy(card1.hasSameSuitAs(card2));
+                    EXPECT.truthy(card2.hasSameSuitAs(card1));
+                }
+                else {
+                    EXPECT.falsy(card1.hasSameSuitAs(card2));
+                    EXPECT.falsy(card2.hasSameSuitAs(card1));
                 }
             }
-        });
+        }
     });
 }
 
 // hasHigherSuitThan(other: PlayingCard): boolean
-function testHasHigherSuitThan(): void {
-    describe('hasHigherSuitThan()', () => {
-
-        test('if either card is a joker, returns false', () => {
-            const joker = new PlayingCard(0);
-            for (let t = 0; t <= 52; t++) {
-                const other = new PlayingCard(t);
-                expect(joker.hasHigherSuitThan(other)).toBeFalsy();
-                expect(other.hasHigherSuitThan(joker)).toBeFalsy();
-            }
-        });
-
-        test('matches ONLY against cards with a higher suit', () => {
-            for (let t1 = 1; t1 <= 52; t1++) {
-                for (let t2 = 1; t2 <= 52; t2++) {
-                    const cardA = new PlayingCard(t1);
-                    const cardB = new PlayingCard(t2);
-                    if (cardA.suit.number > cardB.suit.number) {
-                        expect(cardA.hasHigherSuitThan(cardB)).toBeTruthy();
-                        expect(cardB.hasHigherSuitThan(cardA)).not.toBeTruthy();
-                    }
-                    else if (cardA.suit.number < cardB.suit.number) {
-                        expect(cardA.hasHigherSuitThan(cardB)).not.toBeTruthy();
-                        expect(cardB.hasHigherSuitThan(cardA)).toBeTruthy();
-                    }
+function testCanIdentifyCardsWithAHigherSuit(): void {
+    test('can identify cards with a higher suit', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.suit.number > card2.suit.number) {
+                    EXPECT.truthy(card1.hasHigherSuitThan(card2));
+                    EXPECT.falsy(card2.hasHigherSuitThan(card1));
+                }
+                if (card2.suit.number > card1.suit.number) {
+                    EXPECT.truthy(card2.hasHigherSuitThan(card1));
+                    EXPECT.falsy(card1.hasHigherSuitThan(card2));
                 }
             }
-        });
-
+        }
     });
 }
 
 // hasLowerSuitThan(other: PlayingCard): boolean
-function testHasLowerSuitThan(): void {
-    describe('hasLowerSuitThan()', () => {
-
-        test('if either card is a joker, returns false', () => {
-            const joker = new PlayingCard(0);
-            for (let t = 0; t <= 52; t++) {
-                const other = new PlayingCard(t);
-                expect(joker.hasLowerSuitThan(other)).toBeFalsy();
-                expect(other.hasLowerSuitThan(joker)).toBeFalsy();
-            }
-        });
-
-        test('matches ONLY against cards with a lower suit', () => {
-            for (let t1 = 1; t1 <= 52; t1++) {
-                for (let t2 = 1; t2 <= 52; t2++) {
-                    const cardA = new PlayingCard(t1);
-                    const cardB = new PlayingCard(t2);
-                    if (cardA.suit.number < cardB.suit.number) {
-                        expect(cardA.hasLowerSuitThan(cardB)).toBeTruthy();
-                        expect(cardB.hasLowerSuitThan(cardA)).not.toBeTruthy();
-                    }
-                    else if (cardA.suit.number > cardB.suit.number) {
-                        expect(cardA.hasLowerSuitThan(cardB)).not.toBeTruthy();
-                        expect(cardB.hasLowerSuitThan(cardA)).toBeTruthy();
-                    }
+function testCanIdentifyCardsWithALowerSuit(): void {
+    test('can identify cards with a lower suit', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.suit.number < card2.suit.number) {
+                    EXPECT.truthy(card1.hasLowerSuitThan(card2));
+                    EXPECT.falsy(card2.hasLowerSuitThan(card1));
+                }
+                if (card2.suit.number < card1.suit.number) {
+                    EXPECT.truthy(card2.hasLowerSuitThan(card1));
+                    EXPECT.falsy(card1.hasLowerSuitThan(card2));
                 }
             }
-        });
+        }
+    });
+}
 
+function testJokersCannotHaveAHigherOrLowerSuitButCanBeTheSameSuit(): void {
+    test('jokers cannot have a higher or lower suit but can be the same suit', () => {
+        const joker1 = new PlayingCard(0);
+        const joker2 = new PlayingCard(0);
+        EXPECT.falsy(joker1.hasHigherSuitThan(joker2));
+        EXPECT.falsy(joker2.hasHigherSuitThan(joker1));
+        EXPECT.falsy(joker1.hasLowerSuitThan(joker2));
+        EXPECT.falsy(joker2.hasLowerSuitThan(joker1));
+        EXPECT.truthy(joker1.hasSameSuitAs(joker2));
+        EXPECT.truthy(joker2.hasSameSuitAs(joker1));
     });
 }
 
 // isHigherThan(other: PlayingCard): boolean
-function testIsHigherThan(): void {
-    describe('isHigherThan()', () => {
+function testIdentifiesAJokerAsORderedHigherThanAllOtherCards(): void {
+    test('identifies a joker as ordered higher than all other cards', () => {
+        const joker = new PlayingCard(0);
+        for (let type = 1; type <= 52; type++) {
+            const other = new PlayingCard(<tPlayingCardType>type);
+            EXPECT.truthy(joker.isHigherThan(other));
+            EXPECT.falsy(other.isHigherThan(joker));
+        }
+    });
+}
 
-        // a joker is higher than any other card
-        test('a joker is higher than any other card', () => {
-            const joker = new PlayingCard(0);
-            for (let t = 1; t <= 52; t++) {
-                const other = new PlayingCard(t);
-                expect(joker.isHigherThan(other)).toBeTruthy();
-            }
-        });
-
-        // false if other card is a joker
-        test('false if other card is a joker', () => {
-            const joker = new PlayingCard(0);
-            for (let t = 1; t <= 52; t++) {
-                const other = new PlayingCard(t);
-                expect(other.isHigherThan(joker)).not.toBeTruthy();
-            }
-        });
-
-        // sorted by rank if ranks not the same
-        test('sorted by rank if ranks not the same', () => {
-            for (let t1 = 1; t1 <= 52; t1++) {
-                for (let t2 = 1; t2 <= 52; t2++) {
-                    const cardA = new PlayingCard(t1);
-                    const cardB = new PlayingCard(t2);
-                    if (cardA.rank.number > cardB.rank.number) {
-                        expect(cardA.isHigherThan(cardB)).toBeTruthy();
-                    }
-                    if (cardA.rank.number < cardB.rank.number) {
-                        expect(cardB.isHigherThan(cardA)).toBeTruthy();
-                    }
+function testIdentifiesCardsWithAHigherRankAreOrderedHigher(): void {
+    test('identifies cards with a higher rank are ordered higher', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.rank.number > card2.rank.number) {
+                    EXPECT.truthy(card1.isHigherThan(card2));
+                }
+                if (card2.rank.number > card1.rank.number) {
+                    EXPECT.truthy(card2.isHigherThan(card1));
                 }
             }
-        });
+        }
+    });
+}
 
-        // sorted by suit if rank is the same
-        test('sorted by suit if rank is the same', () => {
-            for (let t1 = 1; t1 <= 52; t1++) {
-                for (let t2 = 1; t2 <= 52; t2++) {
-                    const cardA = new PlayingCard(t1);
-                    const cardB = new PlayingCard(t2);
-                    if (cardA.hasSameRankAs(cardB)) { // <-- and what if the card has a lower rank but higher suit? subtle bug
-                        if (cardA.suit.number > cardB.suit.number) {
-                            expect(cardA.isHigherThan(cardB)).toBeTruthy();
-                            expect(cardB.isHigherThan(cardA)).not.toBeTruthy();
-                        }
-                        if (cardA.suit.number < cardB.suit.number) {
-                            expect(cardA.isHigherThan(cardB)).not.toBeTruthy();
-                            expect(cardB.isHigherThan(cardA)).toBeTruthy();
-                        }
-                    }
-                    if (cardA.hasLowerRankThan(cardB)) {
-                        if (cardA.suit.number > cardB.suit.number) { // <-- does not matter if rank is lower
-                            expect(cardA.isHigherThan(cardB)).not.toBeTruthy();
-                            expect(cardB.isHigherThan(cardA)).toBeTruthy();
-                        }
-                        if (cardA.suit.number < cardB.suit.number) {
-                            expect(cardA.isHigherThan(cardB)).not.toBeTruthy();
-                            expect(cardB.isHigherThan(cardA)).toBeTruthy();
-                        }
-                    }
+function testIdentifiesCardsWithTheSameRankAndAHigherSuitAreOrderedHigher(): void {
+    test('identifies cards with same rank and higher suit are ordered higher', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.hasSameRankAs(card2) && card1.hasHigherSuitThan(card2)) {
+                    EXPECT.truthy(card1.isHigherThan(card2));
+                }
+                if (card2.hasSameRankAs(card1) && card2.hasHigherSuitThan(card1)) {
+                    EXPECT.truthy(card2.isHigherThan(card1));
                 }
             }
-        });
+        }
+    });
+}
 
+function testIdentifiesAllOtherCardsAsNOTBeingOrderedHigher(): void {
+    test('identifies all other cards as NOT being ordered higher', () => {
+        for (let t1 = 1; t1 <= 52; t1++) {
+            for (let t2 = 1; t2 <= 52; t2++) {
+                const card1 = new PlayingCard(<tPlayingCardType>t1);
+                const card2 = new PlayingCard(<tPlayingCardType>t2);
+                if (card1.hasLowerRankThan(card2) || (card1.hasSameRankAs(card2) && !card1.hasHigherSuitThan(card2))) {
+                    EXPECT.falsy(card1.isHigherThan(card2));
+                }
+                if (card2.hasLowerRankThan(card1) || (card2.hasSameRankAs(card1) && !card2.hasHigherSuitThan(card1))) {
+                    EXPECT.falsy(card2.isHigherThan(card1));
+                }
+
+            }
+        }
+    });
+}
+
+
+
+/**
+ * UTILITY FUNCTIONS
+ */
+
+function testCardName(type: tPlayingCardType, name: string): void {
+    test(`card type: ${type} has card name: ${name}`, () => {
+        const card = new PlayingCard(type);
+        EXPECT.toBe(card.name, name);
+    });
+}
+
+function testDefiniteCardName(type: tPlayingCardType, name: string): void {
+    test(`card type: ${type} has definite (a|an) card name: ${name}`, () => {
+        const card = new PlayingCard(type);
+        EXPECT.toBe(card.nameDefinite, name);
+    });
+}
+
+function testIndefiniteCardName(type: tPlayingCardType, name: string): void {
+    test(`card type: ${type} has indefinite (the) card name: ${name}`, () => {
+        const card = new PlayingCard(type);
+        EXPECT.toBe(card.nameIndefinite, name);
+    });
+}
+
+function testPluralCardName(type: tPlayingCardType, name: string): void {
+    test(`card type: ${type} has plural card name: ${name}`, () => {
+        const card = new PlayingCard(type);
+        EXPECT.toBe(card.namePlural, name);
     });
 }

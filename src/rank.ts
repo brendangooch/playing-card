@@ -1,22 +1,26 @@
 /**
- * represents the rank/value/number of a playing card in a standard deck of cards
+ * represents the rank of a playing card in a standard deck of cards
  */
 
-export default class Rank {
+import { type tPlayingCardType } from "./index.js";
+import { getRankFromType } from "./get-rank-from-type.js";
 
-    // @ts-ignore
-    private type: number;
+export class Rank {
 
-    public constructor(type: number) {
-        this.type = (type < 0 || type > 52) ? 0 : type;
+    private type: tPlayingCardType;
+
+    public constructor(type: tPlayingCardType) {
+        this.type = type;
     }
 
     public get number(): number {
-        return (this.type === 0) ? 0 : (this.type % 13 === 0) ? 13 : this.type % 13;
+        return getRankFromType(this.type);
     }
 
     public get name(): string {
         switch (this.number) {
+            case 0:
+                return 'joker';
             case 1:
                 return 'ace';
             case 2:
@@ -43,9 +47,8 @@ export default class Rank {
                 return 'queen';
             case 13:
                 return 'king';
-            default:
-                return 'joker';
         }
+        return 'undefined'
     }
 
     public get nameDefinite(): string {

@@ -2,80 +2,82 @@
  * 
  */
 
-import Rank from "./rank.js";
-import Suit from "./suit.js";
+import { type tPlayingCardType } from "./index.js";
+import { Rank } from "./rank.js";
+import { Suit } from "./suit.js";
 
-export default class PlayingCard {
+export class PlayingCard {
 
-    private t: number;
-    private r: Rank;
-    private s: Suit;
+    private _type: tPlayingCardType;
+    private _rank: Rank;
+    private _suit: Suit;
 
-    public constructor(type: number) {
-        this.t = (type < 0 || type > 52) ? 0 : type;
-        this.r = new Rank(this.t);
-        this.s = new Suit(this.t);
+    public constructor(type: tPlayingCardType) {
+        this._type = type;
+        this._rank = new Rank(this._type);
+        this._suit = new Suit(this._type);
     }
 
     public get type(): number {
-        return this.t;
+        return this._type;
     }
 
     public get rank(): Rank {
-        return this.r;
+        return this._rank;
     }
 
     public get suit(): Suit {
-        return this.s;
+        return this._suit;
     }
 
+    // {rank} of {suit}s
     public get name(): string {
-        if (this.isJoker()) return 'joker';
+        if (this.isJoker) return 'joker';
         return `${this.rank.name} of ${this.suit.name}s`;
     }
 
     // a | an ...
     public get nameDefinite(): string {
-        if (this.isJoker()) return 'a joker';
+        if (this.isJoker) return 'a joker';
         return `${this.rank.nameDefinite} of ${this.suit.name}s`;
     }
 
     // the ...
     public get nameIndefinite(): string {
-        if (this.isJoker()) return 'the joker';
+        if (this.isJoker) return 'the joker';
         return `${this.rank.nameIndefinite} of ${this.suit.name}s`;
     }
 
     // {rank}s of {suit}s
     public get namePlural(): string {
-        if (this.isJoker()) return 'jokers';
+        if (this.isJoker) return 'jokers';
         return `${this.rank.namePlural} of ${this.suit.name}s`;
     }
 
-    public isJoker(): boolean {
-        return this.t === 0;
+    public get isJoker(): boolean {
+        return this._type === 0;
     }
 
     public clone(): PlayingCard {
-        return new PlayingCard(this.t);
+        return new PlayingCard(this._type);
     }
 
-    public isRank(rank: number): boolean {
+    public isRankNumber(rank: number): boolean {
         return this.rank.number === rank;
     }
 
-    public isSuit(suit: number): boolean {
+    public isSuitNumber(suit: number): boolean {
         return this.suit.number === suit;
     }
 
     // the value between this card's rank and the other card's rank
-    public valueBetween(other: PlayingCard): number {
-        if (this.isJoker() || other.isJoker()) return -1;
+    public valueBetweenRanks(other: PlayingCard): number {
+        if (this.isJoker || other.isJoker) return -1;
         return Math.abs(this.rank.number - other.rank.number);
     }
 
-    public isSameCard(other: PlayingCard): boolean {
-        return this.rank.number === other.rank.number && this.suit.number === other.suit.number;
+    public isSameCardAs(other: PlayingCard): boolean {
+        return (this.isJoker && other.isJoker) || (this.hasSameRankAs(other) && this.hasSameSuitAs(other));
     }
 
     public hasSameRankAs(other: PlayingCard): boolean {
@@ -83,12 +85,12 @@ export default class PlayingCard {
     }
 
     public hasHigherRankThan(other: PlayingCard): boolean {
-        if (this.isJoker() || other.isJoker()) return false;
+        if (this.isJoker || other.isJoker) return false;
         return this.rank.number > other.rank.number;
     }
 
     public hasLowerRankThan(other: PlayingCard): boolean {
-        if (this.isJoker() || other.isJoker()) return false;
+        if (this.isJoker || other.isJoker) return false;
         return this.rank.number < other.rank.number;
     }
 
@@ -97,19 +99,19 @@ export default class PlayingCard {
     }
 
     public hasHigherSuitThan(other: PlayingCard): boolean {
-        if (this.isJoker() || other.isJoker()) return false;
+        if (this.isJoker || other.isJoker) return false;
         return this.suit.number > other.suit.number;
     }
 
     public hasLowerSuitThan(other: PlayingCard): boolean {
-        if (this.isJoker() || other.isJoker()) return false;
+        if (this.isJoker || other.isJoker) return false;
         return this.suit.number < other.suit.number;
     }
 
-    // a joker ranks highest, then a greater value, then a higher suit
+    // a joker has highest value, then ordered by rank, then by suit (for deterministic sorting)
     public isHigherThan(other: PlayingCard): boolean {
-        if (this.isJoker()) return true;
-        if (other.isJoker()) return false;
+        if (this.isJoker) return true;
+        if (other.isJoker) return false;
         if (this.hasHigherRankThan(other)) return true;
         if (this.hasSameRankAs(other) && this.hasHigherSuitThan(other)) return true;
         return false;
