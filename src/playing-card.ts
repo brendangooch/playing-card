@@ -18,7 +18,7 @@ export class PlayingCard {
         this._suit = new Suit(this._type);
     }
 
-    public get type(): number {
+    public get type(): tPlayingCardType {
         return this._type;
     }
 

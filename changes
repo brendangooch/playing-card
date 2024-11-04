@@ -4,3 +4,5 @@ v3.0.0
     changed name of a few methods in PlayingCard class
     re-wrote full tests
     
+v3.0.1
+    PlayingCard.type now returns tPlayingCard type instead of number, as it should
